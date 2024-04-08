@@ -1,0 +1,12 @@
+version: '3.8'  
+services:  
+  db:  
+    container_name: tienda_db  
+    image: postgres  
+    restart: always  
+    environment:  
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: 3008  
+      POSTGRES_DB: tienda 
+    ports:  
+      - "5432:5432"   
