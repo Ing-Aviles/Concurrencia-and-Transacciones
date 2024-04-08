@@ -13,7 +13,6 @@ const DB = new Pool({
     port: 5432
 });
 
-// Ver productos
 app.get('/productos', async (request, response) => {
 
     try{
@@ -30,7 +29,6 @@ app.get('/productos', async (request, response) => {
 
 });
 
-// Ver producto
 app.get('/productos/:id', async (request, response) => {
     const { id } = request.params;
 
@@ -56,7 +54,6 @@ app.get('/productos/:id', async (request, response) => {
 
 });
 
-// comprar producto
 app.get('/comprar/:id/:cantidad', async (request, response) => {
     const { id, cantidad } = request.params;
 
@@ -65,7 +62,6 @@ app.get('/comprar/:id/:cantidad', async (request, response) => {
         // Inicio de la transaccion
         await DB.query('BEGIN');
 
-        // Fase 1: fase de crecimiento, se bloquea la fila del producto
         const { rows } = await DB.query('SELECT * FROM productos WHERE id = $1', [id]);
 
         if (rows.length == 0) {
@@ -86,7 +82,6 @@ app.get('/comprar/:id/:cantidad', async (request, response) => {
 
         await DB.query('UPDATE productos SET stock = stock - $1 WHERE id = $2', [cantidad, id]);
 
-        // Fase 2: fase de reduccion, confirmamos la transaccion y los cambios se realizan en la bd
         await DB.query('COMMIT');
 
         return response.status(202).json({
